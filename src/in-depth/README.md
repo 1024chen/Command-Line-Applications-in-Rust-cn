@@ -1,4 +1,4 @@
-# In-depth topics
+# 一些深入讨论的话题
 
-A small collection of chapters covering some more details
-that you might care about when writing your command line application.
+接下来是一些小章节的集合，其涵盖了一些您在编写命令行应用时可能会关心的很多细节。
+

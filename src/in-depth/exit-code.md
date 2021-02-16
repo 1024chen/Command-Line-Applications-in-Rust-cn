@@ -1,35 +1,13 @@
-# Exit codes
+# 退出码
 
-A program doesn't always succeed.
-And when an error occurs,
-you should make sure to emit the necessary information correctly.
-In addition to
-[telling the user about errors](human-communication.html),
-on most systems,
-when a process exits,
-it also emits an exit code
-(an integer between 0 and 255 is compatible with most platforms).
-You should try to emit the correct code
-for your program's state.
-For example,
-in the ideal case when your program succeeds,
-it should exit with `0`.
+一个程序并不能总是成功的（也就是毫无 bug），当错误发生时，你应该确保正确地发出必要的信息。除了[告诉用户有关错误](human-communication.html)之外，在大多数系统上，当进程退出时，它还会发出一个退出码（大多数平台所兼容的是一个 0 到 255 的整数）。你应该尝试为程序的状态发出正确的代码。例如，在理想情况下，当程序成功时，它应该以 `0` 退出。
 
-When an error occurs, it gets a bit more complicated, though.
-In the wild,
-many tools exit with `1` when a common failure occurs.
-Currently, Rust sets an exit code of `101` when the process panicked.
-Beyond that, people have done many things in their programs.
+但是，当错误发生的时候，情况也会变得更复杂一点。在实际情况中，当一个常见的故障发生时，许多工具以 `1` 退出。目前， Rust 设置了一个当进程 panic 时的退出码 `101`。除此之外，人们还在自己的程序中做了许多（关于退出码的）事。
 
-So, what to do?
-The BSD ecosystem has collected a common definition for their exit codes
-(you can find them [here][`sysexits.h`]).
-The Rust library [`exitcode`] provides these same codes,
-ready to be used in your application.
-Please see its API documentation for the possible values to use.
+那么，该怎么办呢？BSD 系操作系统为它们的退出码设置了一个通用的定义集合
+(你可以在[这里][`sysexits.h`]找到它们)。 Rust 的  [`exitcode`]  库提供了这些相同的代码，可以被用在你的应用程序中。可能会使用到的值请参阅其 ADP 文档。
 
-After you add the `exitcode` dependency to your `Cargo.toml`,
-you can use it like this:
+在将 `exitcode` 依赖添加到 `Cargo.toml` 之后，你可以像这样使用它：
 
 ```rust,ignore
 fn main() {

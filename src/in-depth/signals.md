@@ -1,64 +1,30 @@
-# Signal handling
+# 信号处理
 
-Processes
-like command line applications
-need to react to signals sent by the operating system.
-The most common example is probably <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-the signal that typically tells a process to terminate.
-To handle signals in Rust programs
-you need to consider how you can receive these signals
-as well as how you can react to them.
+诸如命令行应用这样的进程需要对操作系统发送的信号作出反应。最常见的就比如 <kbd>Ctrl</kbd>+<kbd>C</kbd>，该信号通常告诉进程终止。要在 Rust 程序中处理信号，你需要考虑如何接收这些信号以及如何做出反应。
 
 <aside>
 
-**Note:**
-If your applications does not need to gracefully shutdown,
-the default handling is fine
-(i.e. exit immediately
-and let the OS cleanup resources like open file handles).
-In that case:
-No need to do what this chapter tells you!
+**注意：**
+如果你的应用不需要优雅地关停，则使用默认处理方式就行（即立即退出，让操作系统清理资源，如打开文件句柄）。该情况下：无需执行本章节告诉你的内容。
 
-However,
-for applications that need to clean up after themselves,
-this chapter is very relevant!
-For example,
-if your application needs to
-properly close network connections
-(saying "good bye" to the processes at the other end),
-remove temporary files,
-or reset system settings,
-read on.
+然而，对于那些需要自行清理的应用程序，本章节是很重要的！例如，如果你的应用程序需要正确地关闭网络连接（也就是对另一端的进程说 “再见”），删除临时文件，或者重置系统设置，还请继续阅读。
 
 </aside>
 
-## Differences between operating systems
+## 操作系统间差异
 
-On Unix systems
-(like Linux, macOS, and FreeBSD)
-a process can receive [signals].
-It can either react to them
-in a default (OS-provided) way,
-catch the signal and handle them in a program-defined way,
-or ignore the signal entirely.
+在 Unix 类系统（ 例如 Linux, macOS, 和 FreeBSD ）上，进程可以接收 [信号][signals]。它可以以默认方式（操作系统所提供）对它们做出反应，捕获信号并以程序所定义的方式对它们进行处理，或者完全忽略信号。
 
 [signals]: https://manpages.ubuntu.com/manpages/bionic/en/man7/signal.7.html
 
-Windows does not have signals.
-You can use [Console Handlers]
-to define callbacks that get executed when an event occurs.
-There is also [structured exception handling]
-which handles all the various types of system exceptions such as division by zero, invalid access exceptions, stack overflow, and so on
+Windows 没有信号，你可以用 [Console Handlers][Console Handlers] 来定义在事件发生时执行的回调。还有 [结构化异常处理][structured exception handling]，可以处理各种类型的系统异常，例如被 0 除，无效访问异常，栈溢出，等等之类的。
 
 [Console Handlers]: https://docs.microsoft.com/en-us/windows/console/console-control-handlers
 [structured exception handling]: https://docs.microsoft.com/en-us/windows/desktop/debug/structured-exception-handling
 
-## First off: Handling Ctrl+C
+## 首先：处理 Ctrl+C
 
-The [ctrlc] crate does just what the name suggests:
-It allows you to react to the user pressing <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-in a cross-platform way.
-The main way to use the crate is this:
+[ctrlc] crate 的用途恰如其名：其允许你以跨平台的方式对用户按的 <kbd>Ctrl</kbd>+<kbd>C</kbd> 做出反应，使用该 crate 的主要方法是：
 
 [ctrlc]: https://crates.io/crates/ctrlc
 
@@ -66,31 +32,15 @@ The main way to use the crate is this:
 {{#include signals-ctrlc.rs}}
 ```
 
-This is, of course, not that helpful:
-It only prints a message but otherwise doesn't stop the program.
+当然，这并无帮助：只打印消息，但是不会停止程序（译者注：除非出现错误）。
 
-In a real-world program,
-it's a good idea to instead set a variable in the signal handler
-that you then check in various places in your program.
-For example,
-you can set an `Arc<AtomicBool>`
-(a boolean shareable between threads)
-in your signal handler,
-and in hot loops,
-or when waiting for a thread,
-you periodically check its value
-and break when it becomes true.
+在实际的程序中，最好是在这个执行信号处理的程序中设置一个变量，然后在程序的各个位置进行检查。例如，可以在信号处理中设置一个 `Arc<AtomicBool>` ，然后在热循环（hot loops）中，或者当等待一个线程时，你定时地检查它，并在当它变为 true 时中断（break）。
 
-## Handling other types of signals
+## 处理其它类型的信号
 
-The [ctrlc] crate only handles <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-or, what on Unix systems would be called `SIGINT` (the "interrupt" signal).
-To react to more Unix signals,
-you should have a look at [signal-hook].
-Its design is described in [this blog post][signal-hook-post],
-and it is currently the library with the widest community support.
+[ctrlc][ctrlc] crate 仅处理 <kbd>Ctrl</kbd>+<kbd>C</kbd> ，或者，在 Unix 系统中被称为 `SIGINT` （“中断” 信号）。为了对更多的 Unix 信号做出反应，你应该查看 [signal-hook][signal-hook]。[这篇博文][signal-hook-post]描述了其设计，它时目前社区所支持的最广泛的库。
 
-Here's a simple example:
+这有个简单的例子：
 
 ```rust,ignore
 {{#include signals-hooked.rs}}
@@ -98,44 +48,55 @@ Here's a simple example:
 
 [signal-hook-post]: https://vorner.github.io/2018/06/28/signal-hook.html
 
-## Using channels
+## 使用 channel
 
-Instead of setting a variable
-and having other parts of the program check it,
-you can use channels:
-You create a channel into which the signal handler emits a value
-whenever the signal is received.
-In your application code you use
-this and other channels
-as synchronization points between threads.
-Using [crossbeam-channel] it would look something like this:
+不设置变量并使用程序的其他部分检查它，你可以使用 通道（channel） ：创建一个通道，每当接收到信号时，信号处理程序就向该通道发出一个值。在你的应用程序代码中，可以使用这个通道和其他通道作为线程之间的同步点，使用 [crossbeam-channel] 看起来像这样：
 
 [crossbeam-channel]: https://crates.io/crates/crossbeam-channel
 
 ```rust,ignore
-{{#include signals-channels.rs}}
+use std::time::Duration;
+use crossbeam_channel::{bounded, tick, Receiver, select};
+use anyhow::Result;
+
+fn ctrl_channel() -> Result<Receiver<()>, ctrlc::Error> {
+    let (sender, receiver) = bounded(100);
+    ctrlc::set_handler(move || {
+        let _ = sender.send(());
+    })?;
+
+    Ok(receiver)
+}
+
+fn main() -> Result<()> {
+    let ctrl_c_events = ctrl_channel()?;
+    let ticks = tick(Duration::from_secs(1));
+
+    loop {
+        select! {
+            recv(ticks) -> _ => {
+                println!("working!");
+            }
+            recv(ctrl_c_events) -> _ => {
+                println!();
+                println!("Goodbye!");
+                break;
+            }
+        }
+    }
+
+    Ok(())
+}
 ```
 
-## Using futures and streams
+## 使用 future 和 stream
 
-If you are using [tokio],
-you are most likely already writing your application
-with asynchronous patterns and an event-driven design.
-Instead of using crossbeam's channels directly,
-you can enable signal-hook's `tokio-support` feature.
-This allows you to call [`.into_async()`]
-on signal-hook's `Signals` types
-to get a new type that implements `futures::Stream`.
+如果你使用 [tokio]，说明你很可能已经在你的应用程序中使用了异步模式和事件驱动设计。相比直接使用 crossbeam 的通道，你可以使用 signal-hook 的 `tokio-support` feature，其允许你在 signal-hook 的类型上调用 [`.into_async()`] 来获得实现了 `futures::Stream` 的新类型。
 
 [signal-hook]: https://crates.io/crates/signal-hook
 [tokio]: https://tokio.rs/
 [`.into_async()`]: https://docs.rs/signal-hook/0.1.6/signal_hook/iterator/struct.Signals.html#method.into_async
 
-## What to do when you receive another Ctrl+C while you're handling the first Ctrl+C
+## 当你正在处理第一个 Ctrl+C 的时候接收到了其他的 Ctrl+C 时怎么办
 
-Most users will press <kbd>Ctrl</kbd>+<kbd>C</kbd>,
-and then give your program a few seconds to exit,
-or tell them what's going on.
-If that doesn't happen,
-they will press <kbd>Ctrl</kbd>+<kbd>C</kbd> again.
-The typical behavior is to have the application quit immediately.
+大多数用户会按 <kbd>Ctrl</kbd>+<kbd>C</kbd>，然后给你的程序几秒钟时间退出，或者告诉他们发生了什么。如果这并未发生，他们就会再次按下 <kbd>Ctrl</kbd>+<kbd>C</kbd> 。当然，最典型的行为是使应用程序立即退出。

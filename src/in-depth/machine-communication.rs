@@ -1,10 +1,10 @@
 use structopt::StructOpt;
 use serde_json::json;
 
-/// Search for a pattern in a file and display the lines that contain it.
+/// 在文件中搜索一个模式并显示包含该模式的行。
 #[derive(StructOpt)]
 struct Cli {
-    /// Output JSON instead of human readable messages
+    /// 输出JSON而不是人类可读的消息
     #[structopt(long = "json")]
     json: bool,
 }
