@@ -82,6 +82,7 @@ $ grrs foobar test.txt
 ```
 
 <aside class="node">
+
 **注意:**
 
 可以向字段添加许多自定义属性。例如，我们添加了一个属性来告诉 structopt 如何解析 `PathBuf` 类型。要想在 `-o` 或 `--output` 之后使用该字段作为参数，可以添加 `#[structopt(short = "o", long = "output")]`。更多信息请参阅[structopt 文档][`structopt`]。
@@ -99,7 +100,9 @@ $ grrs foobar test.txt
 但是如果失败了怎么办呢？这时候这种办法的优点就显现出来了：Clap知道期望哪些字段以及期望的格式。它会自动生成一个较好的 `--help` 消息，同时当你写入 `--putput` 时，会发出一些错误提示来建议你更改为 `--output` 。
 
 <aside class="note">
-**注意:**   
+
+**注意：**   
+
 `from_agrs` 方法应该用在 `main`函数中。当其失败时，将会打印错误或帮助信息，并立即退出程序。不要将它用在其他地方。
 
 </aside>
@@ -134,5 +137,6 @@ $ cargo run -- some-pattern some-file
 
 <aside class="exercise">
 **读者练习：**
+
 让程序输出其参数！
 </aside>

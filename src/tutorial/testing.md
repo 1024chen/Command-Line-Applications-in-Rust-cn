@@ -168,8 +168,7 @@ fn find_a_match() {
 Rust 处理项目的方式非常灵活，并且考虑提前将哪些放入你的 crate 的库部分是个好主意。例如，你可以考虑先为应用程序的特定逻辑编写库，之后在 CLI 中像使用其他库一样使用它。或者，如果你的项目有多个二进制文件，你可以将公共的功能放进 crate 的库部分。
 
 <aside class="note">
-
-**注意：:**
+**注意：**
 说说将所有内容放入 `src/main.rs` :如果继续这么做，它将会变得很难阅读。[模块系统][module system] 可以帮助你组织和结构化代码。
 
 [module system]: https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html

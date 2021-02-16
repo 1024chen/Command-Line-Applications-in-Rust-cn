@@ -10,6 +10,7 @@
 
 <aside>
 **补充：**
+
 确保已经先阅读了本教程中 [CLI 输出的章节][output]。它涵盖了如何将输出写入终端。
 
 [output]: ../tutorial/output.html
@@ -130,7 +131,6 @@ $ rg default --json
 如你所见，每一个 JSON 文档都是一个包含 `类型` 字段的对象（map，映射）。这将使我们能编写一个简单的 `rg` 的前端，以便在这些文档到来时读取它们，并显示匹配（以及它们所在的文件），即使 _ripgrep_ 仍在搜索。
 
 <aside>
-
 **补充：**
 这是 Visual Studio Code 使用 _ripgrep_ 进行代码搜索的方式。
 
