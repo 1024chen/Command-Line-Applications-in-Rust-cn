@@ -10,8 +10,11 @@
 ## 本书：
 
 本书仓库地址：
+
 [github](https://github.com/1024chen/Command-Line-Applications-in-Rust-cn)
 [gitee](https://gitee.com/chen0adapter/Command-Line-Applications-in-Rust-cn)
 
 本书阅读地址：
+
+[上海服务器结点](http://chen0adapter.top/books/Command-Line-Applications-in-Rust-cn/index.html)
 
