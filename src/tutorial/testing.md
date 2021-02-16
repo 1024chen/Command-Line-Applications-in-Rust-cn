@@ -168,7 +168,9 @@ fn find_a_match() {
 Rust 处理项目的方式非常灵活，并且考虑提前将哪些放入你的 crate 的库部分是个好主意。例如，你可以考虑先为应用程序的特定逻辑编写库，之后在 CLI 中像使用其他库一样使用它。或者，如果你的项目有多个二进制文件，你可以将公共的功能放进 crate 的库部分。
 
 <aside class="note">
+
 **注意：**
+
 说说将所有内容放入 `src/main.rs` :如果继续这么做，它将会变得很难阅读。[模块系统][module system] 可以帮助你组织和结构化代码。
 
 [module system]: https://doc.rust-lang.org/1.39.0/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html
@@ -187,6 +189,7 @@ Rust 处理项目的方式非常灵活，并且考虑提前将哪些放入你的
 <aside>
 
 **补充：**
+
 按照惯例， `cargo` 将在 `tests/` 目录中寻找集成测试。同样，它会在 `benches/` 目录中寻找基准测试，在 `examples`/ 目录中查找示例。这些约定还扩展约定了你的主要源代码：库有一个 `src/lib.rs` 文件，主二进制文件是 `src/main.rs`，或者，如果有多个二进制文件，Cargo 期望它们在 `src/bin/<name>.rs`。遵循这些约定将使得习惯于阅读 Rust 代码的人更容易发现你的代码库。（译者注：Rust 2018 与 Rust 2015 的约定目录组织方式会略有差别）
 </aside>
 

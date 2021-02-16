@@ -9,6 +9,7 @@
 如果我们的程序能够满足这个期望，我们的用户也会理所当然地很高兴。为了确保这能很好地工作，我们不仅应该为人提供漂亮的输出，还应该提供适合其他程序需求的版本。让我们看看如何做到这点。
 
 <aside>
+
 **补充：**
 
 确保已经先阅读了本教程中 [CLI 输出的章节][output]。它涵盖了如何将输出写入终端。
@@ -131,12 +132,13 @@ $ rg default --json
 如你所见，每一个 JSON 文档都是一个包含 `类型` 字段的对象（map，映射）。这将使我们能编写一个简单的 `rg` 的前端，以便在这些文档到来时读取它们，并显示匹配（以及它们所在的文件），即使 _ripgrep_ 仍在搜索。
 
 <aside>
+
 **补充：**
 这是 Visual Studio Code 使用 _ripgrep_ 进行代码搜索的方式。
 
 </aside>
 
-## Abstract over human and machine output
+## 人机输出抽象
 
 [convey] 是一个开发中的库，其试图让适合人类和机器的格式输出消息变得更容易。你定义自己的消息类型，并实现一个 `Render` trait （手动，借助于宏，或使用 derive 属性）来说明它们应该怎样被格式化。当前，它支持打印人工输出（包括自动检测是否应着色），写入 JSON 文档（到 `stdout` 或文件中），或同时支持二者。
 
@@ -149,6 +151,7 @@ $ rg default --json
 <aside class="todo">
 
 **TODO:**
+
 讨论如何使用 stdin （请参阅 [#95](https://github.com/rust-lang-nursery/cli-wg/issues/95)）
 
 </aside>

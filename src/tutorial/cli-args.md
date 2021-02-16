@@ -44,6 +44,7 @@ $ grrs foobar test.txt
 [`struct`]: https://doc.rust-lang.org/1.39.0/book/ch05-00-structs.html
 
 <aside>
+
 **顺便一说：**
 
 [`PathBuf`] 就像一个[字符串][`String`] 但用于跨平台工作的文件系统路径。
@@ -136,7 +137,9 @@ $ cargo run -- some-pattern some-file
 如你所见，没有输出。这很棒：表示没有错误，程序（运行完）结束了。
 
 <aside class="exercise">
+
 **读者练习：**
 
 让程序输出其参数！
 </aside>
+
