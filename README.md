@@ -18,5 +18,5 @@
 
 翻译阅读地址：
 
-[上海服务器结点](http://chen0adapter.top/books/Command-Line-Applications-in-Rust-cn/index.html)
+[上海服务器结点](https://book.chen0adapter.top/books/Command-Line-Applications-in-Rust-cn/index.html)
 
